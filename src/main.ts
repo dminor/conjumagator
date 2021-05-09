@@ -14,7 +14,7 @@ class State {
     }
 }
 
-let currentState = new State(); 
+let currentState = new State();
 
 function updatePronoun(pronoun: Pronoun) {
     let pronounElement = document.getElementById("pronoun");
