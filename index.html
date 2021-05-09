@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Conjumagator</title>
+    <meta charset="utf-8"/>
+    <link href="styles.css" rel="stylesheet">
+    <script type="module">
+        import { setup } from "./dist/main.js";
+        setup();
+    </script>
+  </head>
+  <body>
+    <h1>Conjumagator</h1>
+    <table class="present" id="table">
+        <tr>
+            <th>Tiempo</th>
+            <td id="tense"></td>
+        </tr>
+        <tr>
+            <th>Verbo</th>
+            <td id="verb"></td>
+        </tr>
+        <tr>
+            <th id="pronoun"></th>
+            <td>
+                <form id="answer">
+                    <input id="input" autofocus autocomplete="off"/>
+                    <input type="button" id="enter" value="↩️"/>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <span id="result"/>
+            </td>
+        </tr>
+    </table>
+    <input class="letter" type="button" id="á" value="á"/>
+    <input class="letter" type="button" id="é" value="é"/>
+    <input class="letter" type="button" id="í" value="í"/>
+    <input class="letter" type="button" id="ñ" value="ñ"/>
+    <input class="letter" type="button" id="ó" value="ó"/>
+    <input class="letter" type="button" id="ú" value="ú"/>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+h1 {
+    margin-left: 0.25em;
+}
+
+input.letter:first-of-type {
+    margin-left: 0.5em;
+}
+
+table {
+    border: 1px solid black;
+    padding: 1em;
+    margin: 0.5em;
+}
+
+th {
+    align: center;
+    padding: 0.25em;
+    width: 40%;
+    text-transform: capitalize;
+}
+
+td {
+    align: center;
+    padding: 0.25em;
+}
+
+td#tense {
+    font-weight: bold;
+}
+
+table.present {
+    background-color: #a8eaea;
+}
+
+table.preterite {
+    background-color: #eaa8ea;
+}
+
+table.imperfect {
+    background-color: #eaeaa8;
+}
