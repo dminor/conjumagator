@@ -64,6 +64,9 @@ function updateTense(tense) {
     else if (tense == "imperfect") {
         tenseElement.innerText = "imperfecto";
     }
+    else if (tense == "perfect") {
+        tenseElement.innerText = "preterito perfecto";
+    }
 }
 function updateVerb(verb) {
     let verbElement = document.getElementById("verb");

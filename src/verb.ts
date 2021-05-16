@@ -13,11 +13,15 @@ export abstract class Verb {
             case "imperfect":
                 return this.conjugateImperfect(pronoun);
                 break;
+            case "perfect":
+                return this.conjugatePerfect(pronoun);
+                break;
         }
     }
     abstract conjugatePresent(pronoun: Pronoun): string;
     abstract conjugatePreterite(pronoun: Pronoun): string;
     abstract conjugateImperfect(pronoun: Pronoun): string;
+    abstract conjugatePerfect(pronoun: Pronoun): string;
 
     constructor(infinitive: string) {
         this.infinitive = infinitive;
@@ -25,6 +29,12 @@ export abstract class Verb {
 
     infinitive: string;
 }
+
+let HaberPresent = new Map([["yo", "he"],
+["tú", "has"],
+["él", "ha"],
+["nosotros", "hemos"],
+["ellos", "han"]]);
 
 class RegularArVerb extends Verb {
     conjugatePresent(pronoun: Pronoun) {
@@ -87,11 +97,17 @@ class RegularArVerb extends Verb {
         }
     }
 
+    conjugatePerfect(pronoun: Pronoun) {
+        return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+
     stem: string;
+    pastParticiple: string;
 
     constructor(infinitive: string) {
         super(infinitive);
         this.stem = infinitive.replace("ar", "");
+        this.pastParticiple = this.stem + "ado"
     }
 }
 
@@ -156,11 +172,21 @@ class RegularErVerb extends Verb {
         }
     }
 
+    conjugatePerfect(pronoun: Pronoun) {
+        return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+
     stem: string;
+    pastParticiple: string;
 
     constructor(infinitive: string) {
         super(infinitive);
         this.stem = infinitive.replace("er", "");
+        if (this.stem.match(/[aeiou]$/)) {
+            this.pastParticiple = this.stem + "ído";
+        } else {
+            this.pastParticiple = this.stem + "ido"
+        }
     }
 }
 
@@ -176,6 +202,11 @@ class RegularIrVerb extends RegularErVerb {
     constructor(infinitive: string) {
         super(infinitive);
         this.stem = infinitive.replace("ir", "");
+        if (this.stem.match(/[aeiou]$/)) {
+            this.pastParticiple = this.stem + "ído";
+        } else {
+            this.pastParticiple = this.stem + "ido"
+        }
     }
 }
 
@@ -200,16 +231,25 @@ class SlightlyIrregularVerb extends Verb {
         return this.regular.conjugateImperfect(pronoun);
     }
 
-    constructor(regular: Verb, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>) {
+    conjugatePerfect(pronoun: Pronoun) {
+        if (this.pastParticiple !== undefined) {
+            return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+        }
+        return this.regular.conjugatePerfect(pronoun);
+    }
+
+    constructor(regular: Verb, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>, pastParticiple?: string) {
         super(regular.infinitive);
         this.present = present;
         this.preterite = preterite;
         this.regular = regular;
+        this.pastParticiple = pastParticiple;
     }
 
     present: Map<Pronoun, string>;
     preterite: Map<Pronoun, string>;
     regular: Verb;
+    pastParticiple: string;
 }
 
 class IrregularVerb extends Verb {
@@ -225,16 +265,22 @@ class IrregularVerb extends Verb {
         return this.imperfect.get(pronoun);
     }
 
-    constructor(infinitive: string, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>, imperfect: Map<Pronoun, string>) {
+    conjugatePerfect(pronoun: Pronoun) {
+        return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+
+    constructor(infinitive: string, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>, imperfect: Map<Pronoun, string>, pastParticiple: string) {
         super(infinitive);
         this.present = present;
         this.preterite = preterite;
         this.imperfect = imperfect;
+        this.pastParticiple = pastParticiple;
     }
 
     present: Map<Pronoun, string>;
     preterite: Map<Pronoun, string>;
     imperfect: Map<Pronoun, string>;
+    pastParticiple: string;
 }
 
 const VERBS: Array<Verb> = [
@@ -271,7 +317,8 @@ const VERBS: Array<Verb> = [
         ["tú", "dijiste"],
         ["él", "dijo"],
         ["nosotros", "dijimos"],
-        ["ellos", "dijeron"]])),
+        ["ellos", "dijeron"]]),
+        "dicho"),
     new SlightlyIrregularVerb(new RegularArVerb("estar"),
         new Map([["yo", "estoy"],
         ["tú", "estás"],
@@ -283,24 +330,14 @@ const VERBS: Array<Verb> = [
         ["él", "estuvo"],
         ["nosotros", "estuvimos"],
         ["ellos", "estuvieron"]])),
-    new SlightlyIrregularVerb(new RegularErVerb("haber"),
-        new Map([["yo", "he"],
-        ["tú", "has"],
-        ["él", "hay"],
-        ["nosotros", "hemos"],
-        ["ellos", "han"]]),
-        new Map([["yo", "hube"],
-        ["tú", "hubiste"],
-        ["él", "hubo"],
-        ["nosotros", "hubimos"],
-        ["ellos", "hubieron"]])),
     new SlightlyIrregularVerb(new RegularErVerb("hacer"),
         new Map([["yo", "hago"]]),
         new Map([["yo", "hice"],
         ["tú", "hiciste"],
         ["él", "hizo"],
         ["nosotros", "hicimos"],
-        ["ellos", "hicieron"]])),
+        ["ellos", "hicieron"]]),
+        "hecho"),
     new IrregularVerb("ir",
         new Map([["yo", "voy"],
         ["tú", "vas"],
@@ -316,7 +353,8 @@ const VERBS: Array<Verb> = [
         ["tú", "ibas"],
         ["él", "iba"],
         ["nosotros", "íbamos"],
-        ["ellos", "iban"]])),
+        ["ellos", "iban"]]),
+        "ido"),
     new SlightlyIrregularVerb(new RegularArVerb("llegar"),
         new Map(), new Map([["yo", "llegué"]])),
     new SlightlyIrregularVerb(new RegularErVerb("poder"),
@@ -365,7 +403,8 @@ const VERBS: Array<Verb> = [
         ["tú", "eras"],
         ["él", "era"],
         ["nosotros", "éramos"],
-        ["ellos", "eran"]])),
+        ["ellos", "eran"]]),
+        "sido"),
     new SlightlyIrregularVerb(new RegularErVerb("tener"),
         new Map([["yo", "tengo"],
         ["tú", "tienes"],
@@ -403,14 +442,16 @@ const VERBS: Array<Verb> = [
         ["tú", "veías"],
         ["él", "veía"],
         ["nosotros", "veíamos"],
-        ["ellos", "veían"]])),
+        ["ellos", "veían"]]),
+        "visto"),
     new SlightlyIrregularVerb(new RegularErVerb("poner"),
         new Map([["yo", "pongo"]]),
         new Map([["yo", "puse"],
         ["tú", "pusiste"],
         ["él", "puso"],
         ["nosotros", "pusimos"],
-        ["ellos", "pusieron"]])),
+        ["ellos", "pusieron"]]),
+        "puesto"),
 ];
 
 export function randomVerb() {

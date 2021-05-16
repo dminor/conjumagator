@@ -29,13 +29,17 @@ td#tense {
 }
 
 table.present {
-    background-color: #a8eaea;
+    background-color: #f77bcd;
 }
 
 table.preterite {
-    background-color: #eaa8ea;
+    background-color: #70dafa;
 }
 
 table.imperfect {
-    background-color: #eaeaa8;
+    background-color: #91f388;
+}
+
+table.perfect {
+    background-color: #cf94f7;
 }

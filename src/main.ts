@@ -67,6 +67,8 @@ function updateTense(tense: Tense) {
         tenseElement.innerText = "preterito";
     } else if (tense == "imperfect") {
         tenseElement.innerText = "imperfecto";
+    } else if (tense == "perfect") {
+        tenseElement.innerText = "preterito perfecto";
     }
 }
 
