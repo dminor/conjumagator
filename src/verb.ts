@@ -16,12 +16,16 @@ export abstract class Verb {
             case "perfect":
                 return this.conjugatePerfect(pronoun);
                 break;
+            case "pluperfect":
+                return this.conjugatePluperfect(pronoun);
+                break;
         }
     }
     abstract conjugatePresent(pronoun: Pronoun): string;
     abstract conjugatePreterite(pronoun: Pronoun): string;
     abstract conjugateImperfect(pronoun: Pronoun): string;
     abstract conjugatePerfect(pronoun: Pronoun): string;
+    abstract conjugatePluperfect(pronoun: Pronoun): string;
 
     constructor(infinitive: string) {
         this.infinitive = infinitive;
@@ -35,6 +39,12 @@ let HaberPresent = new Map([["yo", "he"],
 ["él", "ha"],
 ["nosotros", "hemos"],
 ["ellos", "han"]]);
+
+let HaberImperfect = new Map([["yo", "había"],
+["tú", "habías"],
+["él", "había"],
+["nosotros", "habíamos"],
+["ellos", "habían"]]);
 
 class RegularArVerb extends Verb {
     conjugatePresent(pronoun: Pronoun) {
@@ -99,6 +109,10 @@ class RegularArVerb extends Verb {
 
     conjugatePerfect(pronoun: Pronoun) {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+
+    conjugatePluperfect(pronoun: Pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
     }
 
     stem: string;
@@ -176,6 +190,10 @@ class RegularErVerb extends Verb {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
     }
 
+    conjugatePluperfect(pronoun: Pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
+    }
+
     stem: string;
     pastParticiple: string;
 
@@ -238,6 +256,13 @@ class SlightlyIrregularVerb extends Verb {
         return this.regular.conjugatePerfect(pronoun);
     }
 
+    conjugatePluperfect(pronoun: Pronoun) {
+        if (this.pastParticiple !== undefined) {
+            return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
+        }
+        return this.regular.conjugatePluperfect(pronoun);
+    }
+
     constructor(regular: Verb, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>, pastParticiple?: string) {
         super(regular.infinitive);
         this.present = present;
@@ -267,6 +292,10 @@ class IrregularVerb extends Verb {
 
     conjugatePerfect(pronoun: Pronoun) {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+
+    conjugatePluperfect(pronoun: Pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
     }
 
     constructor(infinitive: string, present: Map<Pronoun, string>, preterite: Map<Pronoun, string>, imperfect: Map<Pronoun, string>, pastParticiple: string) {

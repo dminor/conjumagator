@@ -16,6 +16,9 @@ export class Verb {
             case "perfect":
                 return this.conjugatePerfect(pronoun);
                 break;
+            case "pluperfect":
+                return this.conjugatePluperfect(pronoun);
+                break;
         }
     }
 }
@@ -24,6 +27,11 @@ let HaberPresent = new Map([["yo", "he"],
     ["él", "ha"],
     ["nosotros", "hemos"],
     ["ellos", "han"]]);
+let HaberImperfect = new Map([["yo", "había"],
+    ["tú", "habías"],
+    ["él", "había"],
+    ["nosotros", "habíamos"],
+    ["ellos", "habían"]]);
 class RegularArVerb extends Verb {
     constructor(infinitive) {
         super(infinitive);
@@ -89,6 +97,9 @@ class RegularArVerb extends Verb {
     }
     conjugatePerfect(pronoun) {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+    conjugatePluperfect(pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
     }
 }
 class RegularErVerb extends Verb {
@@ -162,6 +173,9 @@ class RegularErVerb extends Verb {
     conjugatePerfect(pronoun) {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
     }
+    conjugatePluperfect(pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
+    }
 }
 class RegularIrVerb extends RegularErVerb {
     conjugatePresent(pronoun) {
@@ -216,6 +230,12 @@ class SlightlyIrregularVerb extends Verb {
         }
         return this.regular.conjugatePerfect(pronoun);
     }
+    conjugatePluperfect(pronoun) {
+        if (this.pastParticiple !== undefined) {
+            return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
+        }
+        return this.regular.conjugatePluperfect(pronoun);
+    }
 }
 class IrregularVerb extends Verb {
     constructor(infinitive, present, preterite, imperfect, pastParticiple) {
@@ -236,6 +256,9 @@ class IrregularVerb extends Verb {
     }
     conjugatePerfect(pronoun) {
         return HaberPresent.get(pronoun) + " " + this.pastParticiple;
+    }
+    conjugatePluperfect(pronoun) {
+        return HaberImperfect.get(pronoun) + " " + this.pastParticiple;
     }
 }
 const VERBS = [

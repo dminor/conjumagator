@@ -1,5 +1,5 @@
 export function randomTense() {
-    switch (Math.floor(Math.random() * 4)) {
+    switch (Math.floor(Math.random() * 5)) {
         case 0:
             return "present";
             break;
@@ -11,6 +11,9 @@ export function randomTense() {
             break;
         case 3:
             return "perfect";
+            break;
+        case 4:
+            return "pluperfect";
             break;
     }
 }

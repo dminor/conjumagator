@@ -69,6 +69,8 @@ function updateTense(tense: Tense) {
         tenseElement.innerText = "imperfecto";
     } else if (tense == "perfect") {
         tenseElement.innerText = "preterito perfecto";
+    } else if (tense == "pluperfect") {
+        tenseElement.innerText = "pluscuamperfecto";
     }
 }
 
