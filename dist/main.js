@@ -70,6 +70,9 @@ function updateTense(tense) {
     else if (tense == "pluperfect") {
         tenseElement.innerText = "pluscuamperfecto";
     }
+    else if (tense == "future") {
+        tenseElement.innerText = "futuro";
+    }
 }
 function updateVerb(verb) {
     let verbElement = document.getElementById("verb");

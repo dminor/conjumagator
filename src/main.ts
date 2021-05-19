@@ -71,6 +71,8 @@ function updateTense(tense: Tense) {
         tenseElement.innerText = "preterito perfecto";
     } else if (tense == "pluperfect") {
         tenseElement.innerText = "pluscuamperfecto";
+    } else if (tense == "future") {
+        tenseElement.innerText = "futuro";
     }
 }
 
