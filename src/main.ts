@@ -73,6 +73,8 @@ function updateTense(tense: Tense) {
         tenseElement.innerText = "pluscuamperfecto";
     } else if (tense == "future") {
         tenseElement.innerText = "futuro";
+    } else if (tense == "conditional") {
+        tenseElement.innerText = "condicional";
     }
 }
 

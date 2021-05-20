@@ -4,10 +4,11 @@ export type Tense =
     | "imperfect"
     | "perfect"
     | "pluperfect"
-    | "future";
+    | "future"
+    | "conditional";
 
 export function randomTense(): Tense {
-    switch (Math.floor(Math.random() * 6)) {
+    switch (Math.floor(Math.random() * 7)) {
         case 0:
             return "present";
             break;
@@ -25,6 +26,9 @@ export function randomTense(): Tense {
             break;
         case 5:
             return "future";
+            break;
+        case 6:
+            return "conditional";
             break;
     }
 }

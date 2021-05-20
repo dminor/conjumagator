@@ -73,6 +73,9 @@ function updateTense(tense) {
     else if (tense == "future") {
         tenseElement.innerText = "futuro";
     }
+    else if (tense == "conditional") {
+        tenseElement.innerText = "condicional";
+    }
 }
 function updateVerb(verb) {
     let verbElement = document.getElementById("verb");
