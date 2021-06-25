@@ -1,6 +1,7 @@
 export class Verb {
     constructor(infinitive) {
         this.infinitive = infinitive;
+        this.stem = infinitive.substr(0, infinitive.length - 2);
     }
     conjugate(tense, pronoun) {
         switch (tense) {
@@ -41,7 +42,6 @@ let HaberImperfect = new Map([["yo", "había"],
 class RegularArVerb extends Verb {
     constructor(infinitive) {
         super(infinitive);
-        this.stem = infinitive.replace("ar", "");
         this.pastParticiple = this.stem + "ado";
     }
     conjugatePresent(pronoun) {
@@ -149,7 +149,6 @@ class RegularArVerb extends Verb {
 class RegularErVerb extends Verb {
     constructor(infinitive) {
         super(infinitive);
-        this.stem = infinitive.replace("er", "");
         if (this.stem.match(/[aeiou]$/)) {
             this.pastParticiple = this.stem + "ído";
         }
@@ -270,7 +269,7 @@ class RegularIrVerb extends RegularErVerb {
     }
     constructor(infinitive) {
         super(infinitive);
-        this.stem = infinitive.replace("ir", "");
+        this.stem = infinitive.substr(0, infinitive.length - 2);
         if (this.stem.match(/[aeiou]$/)) {
             this.pastParticiple = this.stem + "ído";
         }

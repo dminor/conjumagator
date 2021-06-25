@@ -37,9 +37,11 @@ export abstract class Verb {
 
     constructor(infinitive: string) {
         this.infinitive = infinitive;
+        this.stem = infinitive.substr(0, infinitive.length - 2);
     }
 
     infinitive: string;
+    stem: string;
 }
 
 let HaberPresent = new Map([["yo", "he"],
@@ -163,12 +165,10 @@ class RegularArVerb extends Verb {
         }
     }
 
-    stem: string;
     pastParticiple: string;
 
     constructor(infinitive: string) {
         super(infinitive);
-        this.stem = infinitive.replace("ar", "");
         this.pastParticiple = this.stem + "ado"
     }
 }
@@ -282,12 +282,10 @@ class RegularErVerb extends Verb {
         }
     }
 
-    stem: string;
     pastParticiple: string;
 
     constructor(infinitive: string) {
         super(infinitive);
-        this.stem = infinitive.replace("er", "");
         if (this.stem.match(/[aeiou]$/)) {
             this.pastParticiple = this.stem + "ído";
         } else {
@@ -307,7 +305,7 @@ class RegularIrVerb extends RegularErVerb {
 
     constructor(infinitive: string) {
         super(infinitive);
-        this.stem = infinitive.replace("ir", "");
+        this.stem = infinitive.substr(0, infinitive.length - 2);
         if (this.stem.match(/[aeiou]$/)) {
             this.pastParticiple = this.stem + "ído";
         } else {
