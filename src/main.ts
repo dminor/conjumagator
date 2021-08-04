@@ -6,10 +6,20 @@ class State {
     pronoun: Pronoun;
     tense: Tense;
     verb: Verb;
+    allowedTenses: Map<Tense, boolean>;
+
+    constructor() {
+        this.allowedTenses = new Map();
+    }
 
     randomize() {
         this.pronoun = randomPronoun();
         this.tense = randomTense();
+        if (this.allowedTenses.size > 0) {
+            while (!this.allowedTenses.get(this.tense)) {
+                this.tense = randomTense();
+            }
+        }
         this.verb = randomVerb();
     }
 }
@@ -132,6 +142,21 @@ export function setup() {
             input.value += c;
             input.focus();
         });
+    }
+
+    let allowedTenses = document.getElementById("allowedTenses") as HTMLElement;
+    for (let child of allowedTenses.childNodes) {
+        if (child.nodeName === "INPUT") {
+            let input = child as HTMLInputElement;
+            if (input.checked) {
+                currentState.allowedTenses.set(input.id as Tense, true);
+            } else {
+                currentState.allowedTenses.set(input.id as Tense, false);
+            }
+            input.addEventListener('click', _ => {
+                currentState.allowedTenses.set(input.id as Tense, !currentState.allowedTenses.get(input.id as Tense));
+            });
+        }
     }
 
     nextQuestion();

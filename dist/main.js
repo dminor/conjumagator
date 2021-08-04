@@ -2,9 +2,17 @@ import { randomPronoun } from "./pronoun.js";
 import { randomTense } from "./tense.js";
 import { randomVerb } from "./verb.js";
 class State {
+    constructor() {
+        this.allowedTenses = new Map();
+    }
     randomize() {
         this.pronoun = randomPronoun();
         this.tense = randomTense();
+        if (this.allowedTenses.size > 0) {
+            while (!this.allowedTenses.get(this.tense)) {
+                this.tense = randomTense();
+            }
+        }
         this.verb = randomVerb();
     }
 }
@@ -125,6 +133,21 @@ export function setup() {
             input.value += c;
             input.focus();
         });
+    }
+    let allowedTenses = document.getElementById("allowedTenses");
+    for (let child of allowedTenses.childNodes) {
+        if (child.nodeName === "INPUT") {
+            let input = child;
+            if (input.checked) {
+                currentState.allowedTenses.set(input.id, true);
+            }
+            else {
+                currentState.allowedTenses.set(input.id, false);
+            }
+            input.addEventListener('click', _ => {
+                currentState.allowedTenses.set(input.id, !currentState.allowedTenses.get(input.id));
+            });
+        }
     }
     nextQuestion();
 }

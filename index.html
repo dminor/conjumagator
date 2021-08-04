@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Conjumagator</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <link href="styles.css" rel="stylesheet">
     <script type="module">
         import { setup } from "./dist/main.js";
         setup();
     </script>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>Conjumagator</h1>
     <table class="present" id="table">
         <tr>
@@ -24,23 +26,33 @@
             <th id="pronoun"></th>
             <td>
                 <form id="answer">
-                    <input id="input" autofocus autocomplete="off"/>
-                    <input type="button" id="enter" value="↩️"/>
+                    <input id="input" autofocus autocomplete="off" />
+                    <input type="button" id="enter" value="↩️" />
                 </form>
             </td>
         </tr>
         <tr>
             <th></th>
             <td>
-                <span id="result"/>
+                <span id="result" />
             </td>
         </tr>
     </table>
-    <input class="letter" type="button" id="á" value="á"/>
-    <input class="letter" type="button" id="é" value="é"/>
-    <input class="letter" type="button" id="í" value="í"/>
-    <input class="letter" type="button" id="ñ" value="ñ"/>
-    <input class="letter" type="button" id="ó" value="ó"/>
-    <input class="letter" type="button" id="ú" value="ú"/>
-  </body>
+    <input class="letter" type="button" id="á" value="á" />
+    <input class="letter" type="button" id="é" value="é" />
+    <input class="letter" type="button" id="í" value="í" />
+    <input class="letter" type="button" id="ñ" value="ñ" />
+    <input class="letter" type="button" id="ó" value="ó" />
+    <input class="letter" type="button" id="ú" value="ú" />
+    <form id="allowedTenses">
+        <input type="checkbox" id="present" name="tense" value="yes" checked="true" /> presente
+        <input type="checkbox" id="preterite" name="tense" value="yes" checked="true" /> preterito
+        <input type="checkbox" id="imperfect" name="tense" value="yes" checked="true" /> imperfecto
+        <input type="checkbox" id="perfect" name="tense" value="yes" checked="true" /> preterito perfecto
+        <input type="checkbox" id="pluperfect" name="tense" value="yes" checked="true" /> pluscuamperfecto
+        <input type="checkbox" id="future" name="tense" value="yes" checked="true" /> futuro
+        <input type="checkbox" id="conditional" name="tense" value="yes" checked="true" /> conditional
+    </form>
+</body>
+
 </html>
