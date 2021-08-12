@@ -7,28 +7,9 @@ export type Tense =
     | "future"
     | "conditional";
 
-export function randomTense(): Tense {
-    switch (Math.floor(Math.random() * 7)) {
-        case 0:
-            return "present";
-            break;
-        case 1:
-            return "preterite";
-            break;
-        case 2:
-            return "imperfect";
-            break;
-        case 3:
-            return "perfect";
-            break;
-        case 4:
-            return "pluperfect";
-            break;
-        case 5:
-            return "future";
-            break;
-        case 6:
-            return "conditional";
-            break;
+export function randomTense(allowedTenses: Array<Tense>): Tense {
+    if (allowedTenses.length === 0) {
+        return "present";
     }
+    return allowedTenses[Math.floor(Math.random() * allowedTenses.length)];
 }

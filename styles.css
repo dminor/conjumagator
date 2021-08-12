@@ -13,15 +13,19 @@ table {
 }
 
 th {
-    align: center;
+    box-align: center;
     padding: 0.25em;
     width: 40%;
     text-transform: capitalize;
 }
 
 td {
-    align: center;
+    box-align: center;
     padding: 0.25em;
+}
+
+td#mood {
+    font-weight: bold;
 }
 
 td#tense {

@@ -1,30 +1,39 @@
+import { Mood } from "./mood.js";
 import { Pronoun } from "./pronoun.js";
 import { Tense } from "./tense.js";
 
 export abstract class Verb {
-    conjugate(tense: Tense, pronoun: Pronoun): string {
-        switch (tense) {
-            case "present":
-                return this.conjugatePresent(pronoun);
-                break;
-            case "preterite":
-                return this.conjugatePreterite(pronoun);
-                break;
-            case "imperfect":
-                return this.conjugateImperfect(pronoun);
-                break;
-            case "perfect":
-                return this.conjugatePerfect(pronoun);
-                break;
-            case "pluperfect":
-                return this.conjugatePluperfect(pronoun);
-                break;
-            case "future":
-                return this.conjugateFuture(pronoun);
-                break;
-            case "conditional":
-                return this.conjugateConditional(pronoun);
-                break;
+    conjugate(mood: Mood, tense: Tense, pronoun: Pronoun): string {
+        if (mood === "indicative") {
+            switch (tense) {
+                case "present":
+                    return this.conjugatePresent(pronoun);
+                    break;
+                case "preterite":
+                    return this.conjugatePreterite(pronoun);
+                    break;
+                case "imperfect":
+                    return this.conjugateImperfect(pronoun);
+                    break;
+                case "perfect":
+                    return this.conjugatePerfect(pronoun);
+                    break;
+                case "pluperfect":
+                    return this.conjugatePluperfect(pronoun);
+                    break;
+                case "future":
+                    return this.conjugateFuture(pronoun);
+                    break;
+                case "conditional":
+                    return this.conjugateConditional(pronoun);
+                    break;
+            }
+        } else {
+            switch (tense) {
+                case "present":
+                    return this.conjugateSubjunctivePresent(pronoun);
+                    break;
+            }
         }
     }
     abstract conjugatePresent(pronoun: Pronoun): string;
@@ -34,6 +43,7 @@ export abstract class Verb {
     abstract conjugatePluperfect(pronoun: Pronoun): string;
     abstract conjugateFuture(pronoun: Pronoun): string;
     abstract conjugateConditional(pronoun: Pronoun): string;
+    abstract conjugateSubjunctivePresent(pronoun: Pronoun): string;
 
     constructor(infinitive: string) {
         this.infinitive = infinitive;
@@ -165,6 +175,31 @@ class RegularArVerb extends Verb {
         }
     }
 
+    conjugateSubjunctivePresent(pronoun: Pronoun) {
+        let presentIndicative = this.conjugatePresent("yo");
+        let stem = presentIndicative.substr(0, presentIndicative.length - 1);
+
+        console.log(presentIndicative, stem);
+
+        switch (pronoun) {
+            case "yo":
+                return stem + "e";
+                break;
+            case "tú":
+                return stem + "es";
+                break;
+            case "él":
+                return stem + "e";
+                break;
+            case "nosotros":
+                return stem + "emos";
+                break;
+            case "ellos":
+                return stem + "en";
+                break;
+        }
+    }
+
     pastParticiple: string;
 
     constructor(infinitive: string) {
@@ -282,6 +317,29 @@ class RegularErVerb extends Verb {
         }
     }
 
+    conjugateSubjunctivePresent(pronoun: Pronoun) {
+        let presentIndicative = this.conjugatePresent("yo");
+        let stem = presentIndicative.substr(0, presentIndicative.length - 1);
+
+        switch (pronoun) {
+            case "yo":
+                return stem + "a";
+                break;
+            case "tú":
+                return stem + "as";
+                break;
+            case "él":
+                return stem + "a";
+                break;
+            case "nosotros":
+                return stem + "amos";
+                break;
+            case "ellos":
+                return stem + "an";
+                break;
+        }
+    }
+
     pastParticiple: string;
 
     constructor(infinitive: string) {
@@ -369,12 +427,59 @@ class IrregularVerb extends Verb {
         }
     }
 
+    conjugateSubjunctivePresent(pronoun: Pronoun) {
+        if (this.subjunctivePresent !== undefined && this.subjunctivePresent.has(pronoun)) {
+            return this.subjunctivePresent.get(pronoun);
+        } else {
+            let presentIndicative = this.conjugatePresent("yo");
+            let stem = presentIndicative.substr(0, presentIndicative.length - 1);
+            if (this.regular.infinitive.endsWith('ar')) {
+                switch (pronoun) {
+                    case "yo":
+                        return stem + "e";
+                        break;
+                    case "tú":
+                        return stem + "es";
+                        break;
+                    case "él":
+                        return stem + "e";
+                        break;
+                    case "nosotros":
+                        return stem + "emos";
+                        break;
+                    case "ellos":
+                        return stem + "en";
+                        break;
+                }
+            } else {
+                switch (pronoun) {
+                    case "yo":
+                        return stem + "a";
+                        break;
+                    case "tú":
+                        return stem + "as";
+                        break;
+                    case "él":
+                        return stem + "a";
+                        break;
+                    case "nosotros":
+                        return stem + "amos";
+                        break;
+                    case "ellos":
+                        return stem + "an";
+                        break;
+                }
+            }
+        }
+    }
+
     constructor(regular: Verb,
         present: Map<Pronoun, string>,
         preterite?: Map<Pronoun, string>,
         imperfect?: Map<Pronoun, string>,
         future?: Map<Pronoun, string>,
         conditional?: Map<Pronoun, string>,
+        subjunctivePresent?: Map<Pronoun, string>,
         pastParticiple?: string) {
 
         super(regular.infinitive);
@@ -383,6 +488,7 @@ class IrregularVerb extends Verb {
         this.imperfect = imperfect;
         this.future = future;
         this.conditional = conditional;
+        this.subjunctivePresent = subjunctivePresent;
         this.regular = regular;
         this.pastParticiple = pastParticiple;
     }
@@ -393,6 +499,7 @@ class IrregularVerb extends Verb {
     imperfect: Map<Pronoun, string>;
     future: Map<Pronoun, string>;
     conditional: Map<Pronoun, string>;
+    subjunctivePresent: Map<Pronoun, string>;
     pastParticiple: string;
 }
 
@@ -414,6 +521,11 @@ const VERBS: Array<Verb> = [
         ["nosotros", "éramos"],
         ["ellos", "eran"]]),
         new Map(), new Map(),
+        new Map([["yo", "sea"],
+        ["tú", "seas"],
+        ["él", "sea"],
+        ["nosotros", "seamos"],
+        ["ellos", "sean"]]),
         "sido"),
     new IrregularVerb(new RegularArVerb("estar"),
         new Map([["yo", "estoy"],
@@ -425,7 +537,13 @@ const VERBS: Array<Verb> = [
         ["tú", "estuviste"],
         ["él", "estuvo"],
         ["nosotros", "estuvimos"],
-        ["ellos", "estuvieron"]])),
+        ["ellos", "estuvieron"]]),
+        new Map(), new Map(),
+        new Map([["yo", "esté"],
+        ["tú", "estés"],
+        ["él", "esté"],
+        ["nosotros", "estemos"],
+        ["ellos", "estén"]])),
     new IrregularVerb(new RegularErVerb("tener"),
         new Map([["yo", "tengo"],
         ["tú", "tienes"],
@@ -442,7 +560,13 @@ const VERBS: Array<Verb> = [
         ["tú", "tendrás"],
         ["él", "tendrá"],
         ["nosotros", "tendremos"],
-        ["ellos", "tendrán"]])),
+        ["ellos", "tendrán"]]),
+        new Map(),
+        new Map([["yo", "tenga"],
+        ["tú", "tengas"],
+        ["él", "tenga"],
+        ["nosotros", "tengamos"],
+        ["ellos", "tengan"]])),
     new IrregularVerb(new RegularErVerb("hacer"),
         new Map([["yo", "hago"]]),
         new Map([["yo", "hice"],
@@ -461,6 +585,7 @@ const VERBS: Array<Verb> = [
         ["él", "haría"],
         ["nosotros", "haríamos"],
         ["ellos", "harían"]]),
+        new Map(),
         "hecho"),
     new IrregularVerb(new RegularErVerb("poder"),
         new Map([["yo", "puedo"],
@@ -501,6 +626,7 @@ const VERBS: Array<Verb> = [
         ["él", "diría"],
         ["nosotros", "diríamos"],
         ["ellos", "dirían"]]),
+        new Map(),
         "dicho"),
     new IrregularVerb(new RegularIrVerb("ir"),
         new Map([["yo", "voy"],
@@ -519,6 +645,11 @@ const VERBS: Array<Verb> = [
         ["nosotros", "íbamos"],
         ["ellos", "iban"]]),
         new Map(), new Map(),
+        new Map([["yo", "vaya"],
+        ["tú", "vayas"],
+        ["él", "vaya"],
+        ["nosotros", "vayamos"],
+        ["ellos", "vayan"]]),
         "ido"),
     new IrregularVerb(new RegularErVerb("ver"),
         new Map([["yo", "veo"],
@@ -537,6 +668,7 @@ const VERBS: Array<Verb> = [
         ["nosotros", "veíamos"],
         ["ellos", "veían"]]),
         new Map(), new Map(),
+        new Map(),
         "visto"),
     new IrregularVerb(new RegularArVerb("dar"),
         new Map([["yo", "doy"]]),
@@ -544,7 +676,13 @@ const VERBS: Array<Verb> = [
         ["tú", "diste"],
         ["él", "dio"],
         ["nosotros", "dicimos"],
-        ["ellos", "dieron"]])),
+        ["ellos", "dieron"]]),
+        new Map(), new Map(), new Map(),
+        new Map([["yo", "dé"],
+        ["tú", "des"],
+        ["él", "dé"],
+        ["nosotros", "demos"],
+        ["ellos", "den"]])),
     new IrregularVerb(new RegularErVerb("saber"),
         new Map([["yo", "sé"]]),
         new Map([["yo", "supe"],
@@ -557,7 +695,13 @@ const VERBS: Array<Verb> = [
         ["tú", "sabrás"],
         ["él", "sabrá"],
         ["nosotros", "sabremos"],
-        ["ellos", "sabrán"]])),
+        ["ellos", "sabrán"]]),
+        new Map(),
+        new Map([["yo", "sepa"],
+        ["tú", "sepas"],
+        ["él", "sepa"],
+        ["nosotros", "sepamos"],
+        ["ellos", "sepan"]])),
     new IrregularVerb(new RegularErVerb("querer"),
         new Map([["yo", "quiero"],
         ["tú", "quieres"],
@@ -576,7 +720,13 @@ const VERBS: Array<Verb> = [
         ["nosotros", "querremos"],
         ["ellos", "querrán"]])),
     new IrregularVerb(new RegularArVerb("llegar"),
-        new Map(), new Map([["yo", "llegué"]])),
+        new Map(), new Map([["yo", "llegué"]]),
+        new Map(), new Map(), new Map(),
+        new Map([["yo", "llegue"],
+        ["tú", "llegues"],
+        ["él", "llegue"],
+        ["nosotros", "lleguemos"],
+        ["ellos", "lleguen"]])),
     new RegularArVerb("pasar"),
     new RegularErVerb("deber"),
     new IrregularVerb(new RegularErVerb("poner"),
@@ -597,13 +747,14 @@ const VERBS: Array<Verb> = [
         ["él", "pondría"],
         ["nosotros", "pondríamos"],
         ["ellos", "pondrían"]]),
+        new Map(),
         "puesto"),
     new IrregularVerb(new RegularErVerb("parecer"),
         new Map([["yo", "parezco"]])),
     new RegularArVerb("quedar"),
     new IrregularVerb(new RegularErVerb("creer"),
         new Map(), new Map([["él", "creyó"]]),
-        new Map(), new Map(), new Map(), "creído"),
+        new Map(), new Map(), new Map(), new Map(), "creído"),
     new RegularArVerb("hablar"),
     new RegularArVerb("llevar"),
     new RegularArVerb("dejar"),
@@ -620,7 +771,9 @@ const VERBS: Array<Verb> = [
         ["tú", "encuentras"],
         ["él", "encuentra"],
         ["nosotros", "encontramos"],
-        ["ellos", "encuentran"]])),
+        ["ellos", "encuentran"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "encontremos"]])),
     new RegularArVerb("llamar"),
     new IrregularVerb(new RegularIrVerb("venir"),
         new Map([["yo", "vengo"],
@@ -638,7 +791,9 @@ const VERBS: Array<Verb> = [
         ["tú", "piensas"],
         ["él", "piensa"],
         ["nosotros", "pensamos"],
-        ["ellos", "piensan"]])),
+        ["ellos", "piensan"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "pensemos"]])),
     new IrregularVerb(new RegularIrVerb("salir"),
         new Map([["yo", "salgo"]])),
     new IrregularVerb(new RegularErVerb("volver"),
@@ -647,8 +802,8 @@ const VERBS: Array<Verb> = [
         ["él", "vuelve"],
         ["nosotros", "volvemos"],
         ["ellos", "vuelven"]]),
-        new Map(), new Map(),
-        new Map(), new Map(),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "volvamos"]]),
         "vuelto"),
     new RegularArVerb("tomar"),
     new IrregularVerb(new RegularErVerb("conocer"),
@@ -661,7 +816,9 @@ const VERBS: Array<Verb> = [
         ["nosotros", "sentimos"],
         ["ellos", "sienten"]]),
         new Map([["él", "sintió"],
-        ["ellos", "sintieron"]])),
+        ["ellos", "sintieron"]]),
+        new Map(), new Map(), new Map(),
+        new Map([["nosotros", "sintamos"]])),
     new RegularArVerb("tratar"),
     new RegularArVerb("mirar"),
     new IrregularVerb(new RegularArVerb("contar"),
@@ -669,30 +826,46 @@ const VERBS: Array<Verb> = [
         ["tú", "cuentas"],
         ["él", "cuenta"],
         ["nosotros", "contamos"],
-        ["ellos", "cuentan"]])),
+        ["ellos", "cuentan"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "contemos"]])),
     new IrregularVerb(new RegularArVerb("empezar"),
         new Map([["yo", "empiezo"],
         ["tú", "empiezas"],
         ["él", "empieza"],
         ["nosotros", "empezamos"],
         ["ellos", "empiezan"]]),
-        new Map([["yo", "empece"]])),
+        new Map([["yo", "empece"]]),
+        new Map(), new Map(), new Map(),
+        new Map([["yo", "empiece"],
+        ["tú", "empieces"],
+        ["él", "empiece"],
+        ["nosotros", "empecemos"],
+        ["ellos", "empiecen"]])),
     new RegularArVerb("esperar"),
     new IrregularVerb(new RegularArVerb("buscar"),
         new Map(),
-        new Map([["yo", "busqué"]])),
+        new Map([["yo", "busqué"]]),
+        new Map(), new Map(), new Map(),
+        new Map([["yo", "busque"],
+        ["tú", "busques"],
+        ["él", "busque"],
+        ["nosotros", "busquemos"],
+        ["ellos", "busquen"]])),
     new RegularIrVerb("existir"),
     new RegularArVerb("entrar"),
     new RegularArVerb("trabajar"),
     new IrregularVerb(new RegularIrVerb("escribir"),
         new Map(), new Map(),
-        new Map(), new Map(), new Map(), "escrito"),
+        new Map(), new Map(), new Map(), new Map(), "escrito"),
     new IrregularVerb(new RegularErVerb("perder"),
         new Map([["yo", "pierdo"],
         ["tú", "pierdes"],
         ["él", "pierde"],
         ["nosotros", "perdemos"],
-        ["ellos", "pierden"]])),
+        ["ellos", "pierden"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "perdamos"]])),
     new IrregularVerb(new RegularIrVerb("producir"),
         new Map([["yo", "produzco"]]),
         new Map([["yo", "produje"],
@@ -706,7 +879,9 @@ const VERBS: Array<Verb> = [
         ["tú", "entiendes"],
         ["él", "entiende"],
         ["nosotros", "entendemos"],
-        ["ellos", "entienden"]])),
+        ["ellos", "entienden"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "entendamos"]])),
     new IrregularVerb(new RegularIrVerb("pedir"),
         new Map([["yo", "pido"],
         ["tú", "pides"],
@@ -721,7 +896,13 @@ const VERBS: Array<Verb> = [
         ["tú", "recuerdas"],
         ["él", "recuerda"],
         ["nosotros", "recordamos"],
-        ["ellos", "recuerdan"]])),
+        ["ellos", "recuerdan"]]),
+        new Map(), new Map(), new Map(), new Map(),
+        new Map([["nosotros", "recordemos"]])),
+    new IrregularVerb(new RegularErVerb("escoger"),
+        new Map([["yo", "escojo"]])),
+    new IrregularVerb(new RegularErVerb("exigir"),
+        new Map([["yo", "exijo"]])),
 ];
 
 export function randomVerb() {

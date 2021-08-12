@@ -1,22 +1,38 @@
+import { tensesForMood, randomMood } from "./mood.js";
 import { randomPronoun } from "./pronoun.js";
 import { randomTense } from "./tense.js";
 import { randomVerb } from "./verb.js";
 class State {
     constructor() {
+        this.allowedMoods = new Map();
         this.allowedTenses = new Map();
     }
     randomize() {
+        let allowedMoods = new Array();
+        this.allowedMoods.forEach((value, key, map) => { if (value)
+            allowedMoods.push(key); });
+        this.mood = randomMood(allowedMoods);
         this.pronoun = randomPronoun();
-        this.tense = randomTense();
-        if (this.allowedTenses.size > 0) {
-            while (!this.allowedTenses.get(this.tense)) {
-                this.tense = randomTense();
+        let allowedTenses = new Array();
+        for (let tense of tensesForMood(this.mood)) {
+            if (this.allowedTenses.get(tense)) {
+                allowedTenses.push(tense);
             }
         }
+        this.tense = randomTense(allowedTenses);
         this.verb = randomVerb();
     }
 }
 let currentState = new State();
+function updateMood(mood) {
+    let moodElement = document.getElementById("mood");
+    if (mood == "indicative") {
+        moodElement.innerText = "indicativo";
+    }
+    else {
+        moodElement.innerText = "subjuntivo";
+    }
+}
 function updatePronoun(pronoun) {
     let pronounElement = document.getElementById("pronoun");
     if (pronoun == "él") {
@@ -97,7 +113,7 @@ function checkAnswer(conjugated, answer) {
 function handleAnswer() {
     let input = document.getElementById("input");
     let result = document.getElementById("result");
-    let conjugated = currentState.verb.conjugate(currentState.tense, currentState.pronoun);
+    let conjugated = currentState.verb.conjugate(currentState.mood, currentState.tense, currentState.pronoun);
     if (checkAnswer(conjugated, input.value)) {
         result.innerText = "Correct!";
     }
@@ -121,6 +137,7 @@ function nextQuestion() {
     let result = document.getElementById("result");
     result.innerText = "";
     currentState.randomize();
+    updateMood(currentState.mood);
     updateTense(currentState.tense);
     updatePronoun(currentState.pronoun);
     updateVerb(currentState.verb);
@@ -133,6 +150,21 @@ export function setup() {
             input.value += c;
             input.focus();
         });
+    }
+    let allowedMoods = document.getElementById("allowedMoods");
+    for (let child of allowedMoods.childNodes) {
+        if (child.nodeName === "INPUT") {
+            let input = child;
+            if (input.checked) {
+                currentState.allowedMoods.set(input.id, true);
+            }
+            else {
+                currentState.allowedMoods.set(input.id, false);
+            }
+            input.addEventListener('click', _ => {
+                currentState.allowedMoods.set(input.id, !currentState.allowedMoods.get(input.id));
+            });
+        }
     }
     let allowedTenses = document.getElementById("allowedTenses");
     for (let child of allowedTenses.childNodes) {

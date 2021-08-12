@@ -15,6 +15,10 @@
     <h1>Conjumagator</h1>
     <table class="present" id="table">
         <tr>
+            <th>Modo</th>
+            <td id="mood"></td>
+        </tr>
+        <tr>
             <th>Tiempo</th>
             <td id="tense"></td>
         </tr>
@@ -44,14 +48,18 @@
     <input class="letter" type="button" id="ñ" value="ñ" />
     <input class="letter" type="button" id="ó" value="ó" />
     <input class="letter" type="button" id="ú" value="ú" />
+    <form id="allowedMoods">
+        <input type="checkbox" id="indicative" name="allowedMood" value="yes" checked="true" /> indicativo
+        <input type="checkbox" id="subjunctive" name="allowedMood" value="yes" checked="true" /> subjuntivo
+    </form>
     <form id="allowedTenses">
-        <input type="checkbox" id="present" name="tense" value="yes" checked="true" /> presente
-        <input type="checkbox" id="preterite" name="tense" value="yes" checked="true" /> preterito
-        <input type="checkbox" id="imperfect" name="tense" value="yes" checked="true" /> imperfecto
-        <input type="checkbox" id="perfect" name="tense" value="yes" checked="true" /> preterito perfecto
-        <input type="checkbox" id="pluperfect" name="tense" value="yes" checked="true" /> pluscuamperfecto
-        <input type="checkbox" id="future" name="tense" value="yes" checked="true" /> futuro
-        <input type="checkbox" id="conditional" name="tense" value="yes" checked="true" /> conditional
+        <input type="checkbox" id="present" name="allowedTense" value="yes" checked="true" /> presente
+        <input type="checkbox" id="preterite" name="allowedTense" value="yes" checked="true" /> preterito
+        <input type="checkbox" id="imperfect" name="allowedTense" value="yes" checked="true" /> imperfecto
+        <input type="checkbox" id="perfect" name="allowedTense" value="yes" checked="true" /> preterito perfecto
+        <input type="checkbox" id="pluperfect" name="allowedTense" value="yes" checked="true" /> pluscuamperfecto
+        <input type="checkbox" id="future" name="allowedTense" value="yes" checked="true" /> futuro
+        <input type="checkbox" id="conditional" name="allowedTense" value="yes" checked="true" /> conditional
     </form>
 </body>
 
