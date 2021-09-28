@@ -468,7 +468,7 @@ const VERBS = [
         ["tú", "estuviste"],
         ["él", "estuvo"],
         ["nosotros", "estuvimos"],
-        ["ellos", "estuvieron"]]), new Map(), new Map(), new Map([["yo", "esté"],
+        ["ellos", "estuvieron"]]), new Map(), new Map(), new Map(), new Map([["yo", "esté"],
         ["tú", "estés"],
         ["él", "esté"],
         ["nosotros", "estemos"],
